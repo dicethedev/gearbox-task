@@ -35,10 +35,11 @@ src/
 │   │   
 │   └── ...
 └── ...
-```
+````
 
 ## Folder Structure - HardHat Forking
 
+````
 scripts/
 ├── constant.ts/ constant contain all the contract address and abi use when forking from mainnet
 ├── forking/ forking file contain line of code that is performing the forking from mainnet  
@@ -46,6 +47,7 @@ hardhat.config.ts/ it contain the setup for running the forking from mainnet loc
 │   │   
 │   └── ...
 └── ...
+````
 
 Install your node_modules by using before trying to run the script
 
