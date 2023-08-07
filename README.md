@@ -1,5 +1,6 @@
 ## Folder Structure - CLIENT - i.e.... "Frontend Folder"
 
+````
 src/
 ├── app/
 │   ├── home/
@@ -34,6 +35,7 @@ src/
 │   │   
 │   └── ...
 └── ...
+```
 
 ## Folder Structure - HardHat Forking
 
