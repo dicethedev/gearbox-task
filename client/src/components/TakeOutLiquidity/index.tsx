@@ -54,31 +54,21 @@ const TakeOutLiquidity = ({ onNext }: TakeOutLiquidityProps) => {
     watch: true
   })
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+ 
+ const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
     try {
-      write?.();
-      setCompletedStep(true);
-    } catch (error: any) {
-      console.error(error);
+      write?.(); // Wait for write
+      waitLoading; // Wait for transaction to be confirmed
+     
+      // Once remove wait, mark the step as completed
+      if (data?.hash) {
+        setCompletedStep(true);
+      }
+    } catch (error) {
+      console.error('Error while Removing Liquidity:', error);
     }
   };
-
-  useEffect(() => {
-    const savedCompletedStep = localStorage.getItem('completedStep');
-
-    if (savedCompletedStep === 'true') {
-      setCompletedStep(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (completedStep) {
-      localStorage.setItem('completedStep', 'true');
-    }
-  }, [completedStep]);
-
 
   return (
     <div>
@@ -97,16 +87,18 @@ const TakeOutLiquidity = ({ onNext }: TakeOutLiquidityProps) => {
  
       <button
         style={buttonRemoveStyle}
-        disabled = {isLoading || waitLoading || completedStep}
+        disabled = {isLoading || waitLoading}
         onClick={handleSubmit}
         >
         {
-          (isLoading || waitLoading) ? "Removing..." : completedStep ? 'Step Completed' : 'Remove Liquidity'
+          (isLoading || waitLoading) ? "Removing..." : 'Remove Liquidity'
         }
       </button>
       </div>
 
-      <button style={buttonNextStyle} onClick={onNext} disabled={!completedStep}>Next</button>
+      <button style={buttonNextStyle} onClick={onNext}>Next</button>
+        {/* Display the button when step is completed */}
+        {completedStep && <button>Step Completed</button>}
     </div>
   )
 }

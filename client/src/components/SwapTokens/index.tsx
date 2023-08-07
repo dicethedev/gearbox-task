@@ -98,30 +98,21 @@ const SwapTokens = ({ onPrev, onNext }: SwapTokensProps) => {
     }
   });
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Initiate token approval
-      tokenWrite?.(); 
-      setCompletedStep(true);
-    } catch (error: any) {
-      console.error(error);
+      tokenWrite?.(); // Wait for token approval
+      waitLoading; // Wait for transaction to be confirmed
+      tokenWaitLoading; // Wait for token approval transaction to be confirmed
+
+      // Once both approve and swap are completed, mark the step as completed
+      if (tokenData?.hash && data?.hash) {
+        setCompletedStep(true);
+      }
+    } catch (error) {
+      console.error('Error while swapping:', error);
     }
   };
-
-  useEffect(() => {
-    const savedCompletedStep = localStorage.getItem('swapTokensCompletedStep');
-
-    if (savedCompletedStep === 'true') {
-      setCompletedStep(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (completedStep) {
-      localStorage.setItem('swapTokensCompletedStep', 'true');
-    }
-  }, [completedStep]);
 
 
   return (
@@ -157,9 +148,12 @@ const SwapTokens = ({ onPrev, onNext }: SwapTokensProps) => {
       </div>
 
      <button style={buttonPreviousStyle} onClick={onPrev}>Previous</button>
-     <button style={buttonNextStyle} onClick={onNext} disabled={!completedStep}>
+     <button style={buttonNextStyle} onClick={onNext}>
         Next
       </button>
+
+      {/* Display the button when step is completed */}
+      {completedStep && <button>Step Completed</button>}
     </div>
   )
 }
